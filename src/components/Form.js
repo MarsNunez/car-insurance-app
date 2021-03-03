@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { getYearDiference, calculateBrand, getPlan } from '../helper';
 
 const Field = styled.div`
   display: flex;
@@ -40,7 +41,16 @@ const Button = styled.button`
     cursor: pointer;
     background-color: #26c6da;
   }
-`
+`;
+
+const Error = styled.div`
+  background-color: red;
+  color: #fff;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2.5rem;
+`;
 
 const Form = () => {
 
@@ -48,25 +58,59 @@ const Form = () => {
     brand: '',
     year: '',
     plan: ''
-  })
+  });
+
+  const [ error, setError ] = useState(false)
 
   const { brand, year, plan } = data;
 
-  const getInfo = e => {
+  const handleChange = e => {
     setData({
       ...data,
       [e.target.name]: e.target.value
     })
   }
 
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if ( brand.trim() === '' || year.trim() === '' || plan.trim() === '') {
+      return setError(true);
+    }
+
+    setError(false);
+
+    // Base of 2000
+    let result = 2000;
+
+    // get years diference
+    const difference = getYearDiference(year)
+
+    // For each year we need to rest the 3%
+    result -= (( difference * 3) * result) / 100;
+
+    // Up price by: American = 15% / Asian = 5% / European = 30%
+    result = calculateBrand(brand) * result;
+
+    // Plan 50% or 20%
+    result = parseFloat(result * getPlan(plan)).toFixed(2);
+
+    console.log(result);
+
+  }
+
   return ( 
-    <form>
+    <form
+      onSubmit={handleSubmit}
+    >
+      { error ? <Error>All blanks are required</Error> : null }
+
       <Field>
         <Label>Brand</Label>
         <Select
           name='brand'
           value={brand}
-          onChange={getInfo}
+          onChange={handleChange}
         >
           <option value="">-- Select --</option>
           <option value="american">American</option>
@@ -80,7 +124,7 @@ const Form = () => {
         <Select
           name='year'
           value={year}
-          onChange={getInfo}
+          onChange={handleChange}
         >
           <option value="">-- Select --</option>
           <option value="2021">2021</option>
@@ -102,18 +146,18 @@ const Form = () => {
           name='plan'
           value='basic'
           checked={plan === 'basic'}
-          onChange={getInfo}
+          onChange={handleChange}
           /> Basic
 
         <InputRadio type="radio"
           name='plan'
           value='complete'
           checked={plan === 'complete'}
-          onChange={getInfo}
+          onChange={handleChange}
         /> Complete
       </Field>
 
-      <Button type='button'>Search</Button>
+      <Button type='submit'>Search</Button>
     </form>
    );
 }
