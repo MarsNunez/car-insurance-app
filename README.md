@@ -1,4 +1,4 @@
-# React Budget Application 💰
+# React Car Insurance Application 🚗
 
 ![App Image](https://repository-images.githubusercontent.com/343973441/33a1a880-7c5c-11eb-8861-77a8d9a0d9d0)
 
