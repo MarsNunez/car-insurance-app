@@ -9,8 +9,11 @@ body {
 }
 ul {
   list-style: none;
-  padding: none;
-  margin: none;
+  padding: 0 0 10px 0;
+  margin: 0;
+}
+li {
+  margin: 7px 0;
 }
 span.resultado {
   position: relative;

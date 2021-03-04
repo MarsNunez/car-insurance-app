@@ -52,7 +52,7 @@ const Error = styled.div`
   margin-bottom: 2.5rem;
 `;
 
-const Form = () => {
+const Form = ({ setSummary, setCharging }) => {
 
   const [ data, setData ] = useState({
     brand: '',
@@ -95,7 +95,17 @@ const Form = () => {
     // Plan 50% or 20%
     result = parseFloat(result * getPlan(plan)).toFixed(2);
 
-    console.log(result);
+    setCharging(true);
+
+    setTimeout(() => {
+      setCharging(false);
+
+      setSummary({
+        search: result,
+        data
+      })
+    }, 2000);
+
 
   }
 
